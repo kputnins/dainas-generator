@@ -1,33 +1,81 @@
 @import '../static/styles/styles.scss';
 
 .daina-page {
+  margin: 0 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
   h1 {
-    margin-top: 50px;
+    margin-top: 20px;
     font-size: 4em;
+  }
+
+  h2 {
+    font-size: 2em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    margin-bottom: 3px;
   }
 
   p {
     font-size: 1.5em;
-    margin: 20px 0;
+    margin-top: 20px;
   }
 
-  .controls {
+  form {
     display: flex;
-    margin: 20px 0;
+    justify-content: center;
+    align-items: center;
 
-    .rnd-slider {
+    label {
+      display: flex;
+      flex-direction: column;
+      margin: 5px 0;
+      font-size: 1.2em;
+      margin-bottom: 2px;
+
+      input {
+        width: 120px;
+        color: $color-corcodus-5;
+        margin-top: 2px;
+      }
+    }
+
+    &.disabled {
+      label {
+        color: gray;
+      }
+    }
+  }
+
+  .creation-controls {
+  }
+
+  .training-controls {
+  }
+
+  .model-controls {
+    display: flex;
+
+    label {
       margin: 0 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      font-size: 1.2em;
+      margin-bottom: 10px;
 
-      h3 {
-        margin-bottom: 10px;
+      input {
+        margin-top: 5px;
+      }
+
+      &.disabled {
+        color: gray;
       }
     }
   }

@@ -19,6 +19,7 @@
   .tooltip {
     display: none;
     position: absolute;
+    width: max-content;
     background-color: black;
     padding: 5px 10px;
     bottom: 0;
@@ -29,6 +30,20 @@
 
     .tooltip {
       display: unset;
+    }
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:disabled {
+    background-color: $color-disabled;
+
+    &:hover {
+      .tooltip {
+        display: none;
+      }
     }
   }
 }

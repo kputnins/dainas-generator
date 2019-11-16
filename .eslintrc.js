@@ -18,5 +18,7 @@ module.exports = {
   plugins: ['react'],
   rules: {
     'arrow-parens': 0,
+    'react/button-has-type': 0,
+    'object-curly-newline': 0,
   },
 };
