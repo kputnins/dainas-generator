@@ -1,0 +1,11 @@
+@import './variables.scss';
+
+body {
+  background-color: $color-corcodus-4;
+}
+
+* {
+  margin: 0;
+  box-sizing: border-box;
+  color: $color-white;
+}

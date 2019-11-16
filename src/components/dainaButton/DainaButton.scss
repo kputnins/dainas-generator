@@ -1,0 +1,34 @@
+@import '../../../static/styles/styles.scss';
+
+.daina-button {
+  position: relative;
+  height: 120px;
+  width: 120px;
+  margin: 0 20px;
+  border: 2px solid $color-corcodus-3;
+  border-radius: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 90px;
+  }
+
+  .tooltip {
+    display: none;
+    position: absolute;
+    background-color: black;
+    padding: 5px 10px;
+    bottom: 0;
+  }
+
+  &:hover {
+    background-color: $color-corcodus-3;
+
+    .tooltip {
+      display: unset;
+    }
+  }
+}

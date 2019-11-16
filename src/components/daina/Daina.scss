@@ -1,0 +1,19 @@
+@import '../../../static/styles/styles.scss';
+
+.daina {
+  border: 2px solid $color-corcodus-3; // remove
+  min-width: 250px;
+  margin: 10px;
+  padding: 10px 10px 20px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  pre {
+    font-size: 16px;
+  }
+}
