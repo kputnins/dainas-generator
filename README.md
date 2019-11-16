@@ -1,6 +1,7 @@
 # Dainas Generator
 
 A LSTM (Long Short Term Memory) model that generates Latvian folk songs - Dainas.
+
 Uses TensorFlow.js to create and train the model in the users browser.
 
 ## Building and running on localhost
@@ -31,5 +32,5 @@ node dist/bundle.js
 
 ## Credits
 
-Made with [createapp.dev](https://createapp.dev/)
-Uses [TensorFlow.js](https://www.tensorflow.org/js)
+- Made with [createapp.dev](https://createapp.dev/)
+- Uses [TensorFlow.js](https://www.tensorflow.org/js)
