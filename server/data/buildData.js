@@ -1,13 +1,14 @@
+const fs = require('fs');
+const path = require('path');
 const request = require('request');
 const cheerio = require('cheerio');
-const fs = require('fs');
 
-const writeStream = fs.createWriteStream('./server/data/text/dainas.txt');
+const writeStream = fs.createWriteStream(path.join('server', 'data', 'text.txt'));
 const baseLink = 'http://dainuskapis.lv/meklet/';
 const search = '*';
 
 // Change max value to include all dainas
-for (let i = 0; i < 10; i += 10) {
+for (let i = 0; i < 100; i += 10) {
   request(`${baseLink}${i}/${search}`, (error, response, html) => {
     if (!error && response.statusCode === 200) {
       const $ = cheerio.load(html);

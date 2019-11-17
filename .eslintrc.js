@@ -20,5 +20,8 @@ module.exports = {
     'arrow-parens': 0,
     'react/button-has-type': 0,
     'object-curly-newline': 0,
+    'no-plusplus': 0,
+    'max-len': ['error', { code: 120 }],
+    'no-await-in-loop': 0,
   },
 };
