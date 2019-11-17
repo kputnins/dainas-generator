@@ -5,7 +5,7 @@
   height: 120px;
   width: 120px;
   margin: 0 20px;
-  border: 2px solid $color-corcodus-3;
+  border: 2px solid $color-corcodus-4;
   border-radius: 100%;
   background-color: transparent;
   display: flex;
@@ -26,7 +26,8 @@
   }
 
   &:hover {
-    background-color: $color-corcodus-3;
+    background-color: $color-corcodus-4;
+    cursor: pointer;
 
     .tooltip {
       display: unset;
@@ -35,15 +36,5 @@
 
   &:focus {
     outline: 0;
-  }
-
-  &:disabled {
-    background-color: $color-disabled;
-
-    &:hover {
-      .tooltip {
-        display: none;
-      }
-    }
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /**
  * @license
  * Copyright 2019 Google LLC. All Rights Reserved.
@@ -15,9 +16,9 @@
  * =============================================================================
  */
 
-const fs = require('fs');
 const path = require('path');
 const tf = require('@tensorflow/tfjs-node');
+const textCorpus = require('../../client/static/text.json');
 
 // Get the set of unique characters from text
 const getCharSet = (text, textLength) => {
@@ -179,19 +180,18 @@ const generateText = async (model, text, charSet, sentenceIndices, length, tempe
 };
 
 const main = async () => {
-  const text = fs.readFileSync(path.join('server', 'data', 'text.txt'), { encoding: 'utf-8' });
+  const text = textCorpus.data;
   const textLength = text.length;
-  const sampleLength = 60;
+  const sampleLength = 177;
   const sampleStep = 1;
-  // const lstmLayerSizes = [128, 128, 128];
-  const lstmLayerSizes = [2, 2, 2];
-  const epochs = 2;
+  const lstmLayerSizes = [128, 256];
+  const epochs = 20;
   const examplesPerEpoch = 2048;
-  const batchSize = 128;
+  const batchSize = 64;
   const validationSplit = 0.0625;
-  const learningRate = 0.05;
-  const displayLength = 100;
-  const savePath = path.join('client', 'static', 'model');
+  const learningRate = 0.01;
+  const displayLength = 160;
+  const savePath = path.join('server', 'model', 'model');
 
   const charSet = getCharSet(text, textLength);
   const charSetSize = charSet.length;

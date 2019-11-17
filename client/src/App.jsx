@@ -1,147 +1,149 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import * as tf from '@tensorflow/tfjs';
+import { data } from '../static/text.json';
 import DainaButton from './components/dainaButton/DainaButton';
 import Daina from './components/daina/Daina';
 
 import './App.scss';
 
+const baseClass = 'dainas-generator';
 const infoText = 'LSTM (Long Short Term Memory) model that generates Latvian folk songs - Dainas';
-const dainaText = 'šeit būs dainas teksts\nšeit būs dainas teksts\nšeit būs dainas teksts\nšeit būs dainas teksts';
+
+const loadModel = async () =>
+  // eslint-disable-next-line implicit-arrow-linebreak
+  tf.loadLayersModel(
+    'https://raw.githubusercontent.com/djentelmenis/dainas-generator-model/master/model.json',
+    'https://raw.githubusercontent.com/djentelmenis/dainas-generator-model/master/weights.bin',
+  );
+
+// Draw a sample based on probabilities.
+// eslint-disable-next-line arrow-body-style
+const sample = (probs, temperature) => {
+  return tf.tidy(() => {
+    const logits = tf.div(tf.log(probs), Math.max(temperature, 1e-6));
+    const isNormalized = false;
+    // `logits` is for a multinomial distribution, scaled by the temperature.
+    // We randomly draw a sample from the distribution.
+    return tf.multinomial(logits, 1, null, isNormalized).dataSync()[0];
+  });
+};
+
+const generateText = async (model, text, charSet, sentenceIndices, length, temperature, onTextGenerationChar) => {
+  const sampleLen = model.inputs[0].shape[1];
+  const charSetSize = model.inputs[0].shape[2];
+
+  // Avoid overwriting the original input.
+  // eslint-disable-next-line no-param-reassign
+  sentenceIndices = sentenceIndices.slice();
+
+  let generated = '';
+  while (generated.length < length) {
+    // Encode the current input sequence as a one-hot Tensor.
+    const inputBuffer = new tf.TensorBuffer([1, sampleLen, charSetSize]);
+
+    // Make the one-hot encoding of the seeding sentence.
+    for (let i = 0; i < sampleLen; ++i) {
+      inputBuffer.set(1, 0, i, sentenceIndices[i]);
+    }
+    const input = inputBuffer.toTensor();
+
+    // Call model.predict() to get the probability values of the next
+    // character.
+    const output = model.predict(input);
+
+    // Sample randomly based on the probability values.
+    const winnerIndex = sample(tf.squeeze(output), temperature);
+    const winnerChar = charSet[winnerIndex];
+    if (onTextGenerationChar != null) {
+      await onTextGenerationChar(winnerChar);
+    }
+
+    generated += winnerChar;
+    // eslint-disable-next-line no-param-reassign
+    sentenceIndices = sentenceIndices.slice(1);
+    sentenceIndices.push(winnerIndex);
+
+    // Memory cleanups.
+    input.dispose();
+    output.dispose();
+  }
+  return generated;
+};
+
+// Get the set of unique characters from text
+const getCharSet = (text, textLength) => {
+  const charSet = [];
+  for (let i = 0; i < textLength; ++i) {
+    if (charSet.indexOf(text[i]) === -1) {
+      charSet.push(text[i]);
+    }
+  }
+  return charSet;
+};
+
+// Convert text string to integer indices
+const textToIndices = (text, charSet) => {
+  const indices = [];
+  for (let i = 0; i < text.length; ++i) {
+    indices.push(charSet.indexOf(text[i]));
+  }
+  return indices;
+};
+
+// Get a random slice of text data
+const getRandomSlice = (text, textLength, sampleLength, charSet) => {
+  const startIndex = Math.round(Math.random() * (textLength - sampleLength - 1));
+  const textSlice = text.slice(startIndex, startIndex + sampleLength);
+  return textToIndices(textSlice, charSet);
+};
+
+const text = data;
+const textLength = text.length;
+const sampleLength = 60;
+const charSet = getCharSet(text, textLength);
+const seedIndices = getRandomSlice(text, textLength, sampleLength, charSet);
+const displayLength = 100;
 
 const App = () => {
-  const [isModelCreated, setIsModelCreated] = useState(false);
-  const [isModelTrained, setIsModelTrained] = useState(false);
-  const [LSTMLayers, setLSTMlayers] = useState(128);
-  const [numberOfEpochs, setNumberOfEpochs] = useState(5);
-  const [examplesPerEpoch, setExamplesPerEpoch] = useState(2048);
-  const [batchSize, setBatchSize] = useState(128);
-  const [validationSplit, setValidationSplit] = useState(0.0625);
-  const [learningRate, setLearningRate] = useState(0.01);
-  const [randomness, setRandomness] = useState(15);
+  const [model, setModel] = useState(null);
+  const [temperature, setTemperature] = useState(0.75);
   const [dainas, setDainas] = useState([]);
 
-  const onCreateModel = event => {
-    event.preventDefault();
-    console.log('Create model');
-    setIsModelCreated(true);
-  };
+  useEffect(() => {
+    loadModel().then(loadedModel => {
+      setModel(loadedModel);
+    });
+  }, []);
 
-  const onTrainModel = event => {
-    event.preventDefault();
-    console.log('Train model');
-    setIsModelTrained(true);
-  };
-
-  const onGenerateDaina = () => {
-    const test = [...dainas];
-    test.push(dainaText);
-    setDainas(test);
+  const onGenerateDaina = async () => {
+    const generatedDaina = await generateText(model, text, charSet, seedIndices, displayLength, temperature);
+    const parsedDaina = generatedDaina.split('x').join('\n');
+    setDainas([...dainas, parsedDaina]);
   };
 
   return (
-    <div className="daina-page">
-      <h1>Dainas Generator</h1>
-      <p>{infoText}</p>
-      <h2>Create model</h2>
-      <div className="creation-controls">
-        <form>
-          <div>
-            <label htmlFor="randlstm-layer-size">
-              LSTM layer size
-              <input
-                id="randlstm-layer-size"
-                name="randlstm-layer-size"
-                type="number"
-                value={LSTMLayers}
-                onChange={event => setLSTMlayers(event.target.value)}
-              />
-            </label>
-          </div>
-          <DainaButton onClick={onCreateModel} tooltip="Create model!" type="submit" />
-        </form>
-      </div>
-      <h2>Train model</h2>
-      <div className="training-controls">
-        <form className={!isModelCreated ? 'disabled' : null}>
-          <div>
-            <label htmlFor="number-of-epochs">
-              Number of Epochs
-              <input
-                id="randlstm-layer-size"
-                name="randlstm-layer-size"
-                type="number"
-                value={numberOfEpochs}
-                onChange={event => setNumberOfEpochs(event.target.value)}
-                disabled={!isModelCreated}
-              />
-            </label>
-            <label htmlFor="examples-per-epoch">
-              Examples per epoch
-              <input
-                id="randlstm-layer-size"
-                name="randlstm-layer-size"
-                type="number"
-                value={examplesPerEpoch}
-                onChange={event => setExamplesPerEpoch(event.target.value)}
-                disabled={!isModelCreated}
-              />
-            </label>
-            <label htmlFor="batch-size">
-              Batch size
-              <input
-                id="randlstm-layer-size"
-                name="randlstm-layer-size"
-                type="number"
-                value={batchSize}
-                onChange={event => setBatchSize(event.target.value)}
-                disabled={!isModelCreated}
-              />
-            </label>
-            <label htmlFor="validation-spilt">
-              Validation spilt
-              <input
-                id="randlstm-layer-size"
-                name="randlstm-layer-size"
-                type="number"
-                value={validationSplit}
-                onChange={event => setValidationSplit(event.target.value)}
-                disabled={!isModelCreated}
-              />
-            </label>
-            <label htmlFor="learning-rate">
-              Learning rate
-              <input
-                id="randlstm-layer-size"
-                name="randlstm-layer-size"
-                type="number"
-                value={learningRate}
-                onChange={event => setLearningRate(event.target.value)}
-                disabled={!isModelCreated}
-              />
-            </label>
-          </div>
-          <DainaButton onClick={onTrainModel} tooltip="Train model!" type="submit" disabled={!isModelCreated} />
-        </form>
-      </div>
-      <h2>Generate Dainas</h2>
-      <div className="model-controls">
-        <label className={!isModelTrained ? 'disabled' : null} htmlFor="randomness">
+    <div className={baseClass}>
+      <h1 className={`${baseClass}__title-1`}>Dainas Generator</h1>
+      <p className={`${baseClass}__about`}>{infoText}</p>
+      <h2 className={`${baseClass}__title-2`}>Generate Dainas</h2>
+      <div className={`${baseClass}__controls`}>
+        <label htmlFor="temperature">
           Randomness
           <input
-            name="randomnes"
+            name="temperature"
             type="range"
-            min="0"
-            max="100"
-            step="5"
-            value={randomness}
-            onChange={event => setRandomness(event.target.value)}
-            disabled={!isModelTrained}
+            min="0.05"
+            max="1"
+            step="0.05"
+            value={temperature}
+            onChange={event => setTemperature(event.target.value)}
           />
         </label>
-        <DainaButton onClick={onGenerateDaina} tooltip="Generate Daina!" disabled={!isModelTrained} />
+        <DainaButton onClick={onGenerateDaina} tooltip="Dainafy!" />
       </div>
-      <div className="content">
-        {dainas.map((text, index) => (
-          <Daina title={`Daina ${index + 1}`} text={text} key={`Daina_${index + 1}`} />
+      <div className={`${baseClass}__dainas`}>
+        {dainas.map((generatedDaina, index) => (
+          <Daina title={`Daina ${index + 1}`} text={generatedDaina} key={`Daina_${index + 1}`} />
         ))}
       </div>
     </div>

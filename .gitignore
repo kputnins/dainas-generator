@@ -15,7 +15,5 @@ node_modules/
 *.log
 
 # Scraped training data
-server/data/text.txt
-
-# Created model
-client/static/model
+server/data/text.json
+client/static/text.json

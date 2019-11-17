@@ -1,28 +1,21 @@
 import React from 'react';
-import { func, string, bool } from 'prop-types';
+import { func, string } from 'prop-types';
 import tree from '../../../static/img/austraskoks.svg';
 
 import './DainaButton.scss';
 
-const DainaButton = ({ onClick, tooltip, type, disabled }) => (
+const DainaButton = ({ onClick, tooltip }) => (
   <>
-    <button className="daina-button" type={type} onClick={onClick} disabled={disabled}>
+    <button className="daina-button" onClick={onClick}>
       <img src={tree} alt="Generate new daina" />
       <span className="tooltip">{tooltip}</span>
     </button>
   </>
 );
 
-DainaButton.defaultProps = {
-  disabled: false,
-  type: 'button',
-};
-
 DainaButton.propTypes = {
   onClick: func.isRequired,
   tooltip: string.isRequired,
-  type: string,
-  disabled: bool,
 };
 
 export default DainaButton;

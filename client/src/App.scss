@@ -1,74 +1,39 @@
 @import '../static/styles/styles.scss';
 
-.daina-page {
+.dainas-generator {
   margin: 0 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  h1 {
+  &__title-1 {
     margin-top: 20px;
+    margin-bottom: 20px;
     font-size: 4em;
   }
 
-  h2 {
+  &__title-2 {
     font-size: 2em;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin-top: 40px;
+    margin-bottom: 20px;
   }
 
-  h3 {
-    margin-bottom: 3px;
-  }
-
-  p {
+  &__about {
     font-size: 1.5em;
-    margin-top: 20px;
+    text-align: center;
   }
 
-  form {
+  &__controls {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
 
     label {
-      display: flex;
-      flex-direction: column;
-      margin: 5px 0;
-      font-size: 1.2em;
-      margin-bottom: 2px;
-
-      input {
-        width: 120px;
-        color: $color-corcodus-5;
-        margin-top: 2px;
-      }
-    }
-
-    &.disabled {
-      label {
-        color: gray;
-      }
-    }
-  }
-
-  .creation-controls {
-  }
-
-  .training-controls {
-  }
-
-  .model-controls {
-    display: flex;
-
-    label {
-      margin: 0 20px;
+      margin-bottom: 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       font-size: 1.2em;
-      margin-bottom: 10px;
 
       input {
         margin-top: 5px;
@@ -80,7 +45,7 @@
     }
   }
 
-  .content {
+  &__dainas {
     max-width: 1200px;
     margin: 20px 0;
     display: flex;
