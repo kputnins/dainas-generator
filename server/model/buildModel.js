@@ -137,7 +137,7 @@ const sample = (probs, temperature) => {
 };
 
 // Generate text using a next-char-prediction model.
-const generateText = async (model, text, charSet, sentenceIndices, length, temperature, onTextGenerationChar) => {
+const generateText = async (model, charSet, sentenceIndices, length, temperature, onTextGenerationChar) => {
   const sampleLen = model.inputs[0].shape[1];
   const charSetSize = model.inputs[0].shape[2];
 
@@ -182,14 +182,16 @@ const generateText = async (model, text, charSet, sentenceIndices, length, tempe
 const main = async () => {
   const text = textCorpus.data;
   const textLength = text.length;
-  const sampleLength = 177;
-  const sampleStep = 1;
-  const lstmLayerSizes = [128, 256];
-  const epochs = 20;
-  const examplesPerEpoch = 2048;
-  const batchSize = 64;
+  const sampleLength = 60;
+  const sampleStep = 3;
+  // const lstmLayerSizes = [256, 256, 256];
+  const lstmLayerSizes = [512, 512, 512];
+  const epochs = 300;
+  const examplesPerEpoch = 20000;
+  const batchSize = 256;
   const validationSplit = 0.0625;
-  const learningRate = 0.01;
+  // const learningRate = 1e-2;
+  const learningRate = 2e-2;
   const displayLength = 160;
   const savePath = path.join('server', 'model', 'model');
 
@@ -224,9 +226,9 @@ const main = async () => {
         console.log(`Epoch ${epochCount} of ${epochs}:`);
       },
       onTrainEnd: async () => {
-        if (epochCount % 5 === 0) {
+        if (epochCount % 30 === 0) {
           DISPLAY_TEMPERATURES.forEach(async temperature => {
-            const generated = await generateText(model, text, charSet, seedIndices, displayLength, temperature);
+            const generated = await generateText(model, charSet, seedIndices, displayLength, temperature);
             console.log(`Generated text (temperature=${temperature}):`);
             console.log(`"${generated}"\n`);
           });

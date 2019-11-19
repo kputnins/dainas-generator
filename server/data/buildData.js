@@ -3,11 +3,10 @@ const path = require('path');
 const request = require('request');
 const cheerio = require('cheerio');
 
-const writeStreamTXT = fs.createWriteStream(path.join('server', 'data', 'text.txt'));
-const writeStreamJSON = fs.createWriteStream(path.join('client', 'static', 'text.json'));
+const writeStream = fs.createWriteStream(path.join('client', 'static', 'text.json'));
 const baseLink = 'http://dainuskapis.lv/meklet/';
 const search = '*';
-const pages = 10;
+const pages = 6673;
 
 const scrape = async () => {
   // Change max value to include all dainas
@@ -23,21 +22,14 @@ const scrape = async () => {
             .children()
             .text();
 
-          const dainaTextTXT = $(daina)
-            .text()
-            .replace(/\s\s+/g, '\n');
-
-          const dainaTextJSON = $(daina)
+          const dainaText = $(daina)
             .text()
             .replace(/\s\s+/g, 'x');
 
-          const lineBreakTXT = `\n${j !== dainas.length - 1 ? '\n' : ''}`;
-          const lineBreakJSON = `x${j !== dainas.length - 1 ? 'x' : ''}`;
-          const dainaParsedTXT = dainaTextTXT.replace(dainaSpan, '') + lineBreakTXT;
-          const dainaParsedJSON = dainaTextJSON.replace(dainaSpan, '') + lineBreakJSON;
+          const lineBreak = `x${j !== dainas.length - 1 ? 'x' : ''}`;
+          const dainaParsed = dainaText.replace(dainaSpan, '') + lineBreak;
 
-          writeStreamTXT.write(dainaParsedTXT);
-          writeStreamJSON.write(dainaParsedJSON);
+          writeStream.write(dainaParsed);
         });
       }
     });
@@ -45,7 +37,7 @@ const scrape = async () => {
 };
 
 const saveData = async () => {
-  await writeStreamJSON.write('{ "data": "');
+  await writeStream.write('{ "data": "');
   await scrape();
 };
 

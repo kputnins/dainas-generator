@@ -1,11 +1,19 @@
 @import '../../../static/styles/styles.scss';
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .daina-button {
   position: relative;
   height: 120px;
   width: 120px;
-  margin: 0 20px;
-  border: 2px solid $color-corcodus-4;
+  border: none;
   border-radius: 100%;
   background-color: transparent;
   display: flex;
@@ -13,6 +21,7 @@
   align-items: center;
 
   img {
+    position: absolute;
     width: 90px;
   }
 
@@ -23,6 +32,41 @@
     background-color: black;
     padding: 5px 10px;
     bottom: 0;
+    z-index: 1;
+  }
+
+  &__border {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid $color-corcodus-4;
+    border-radius: 100%;
+
+    &:hover {
+      border-color: $color-white;
+    }
+
+    &.--disabled {
+      animation: spin 2s linear infinite;
+      border-top-color: $color-white;
+      border-bottom-color: $color-white;
+
+      &:hover {
+        border-color: transparent;
+        border-top-color: $color-white;
+        border-bottom-color: $color-white;
+      }
+    }
+  }
+
+  &.--disabled {
+    background-color: $color-corcodus-4;
+
+    &:hover {
+      .tooltip {
+        display: none;
+      }
+    }
   }
 
   &:hover {

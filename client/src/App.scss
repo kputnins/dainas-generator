@@ -14,11 +14,12 @@
 
   &__title-2 {
     font-size: 2em;
-    margin-top: 40px;
+    margin-top: 30px;
     margin-bottom: 20px;
   }
 
   &__about {
+    margin-bottom: 0.5em;
     font-size: 1.5em;
     text-align: center;
   }
@@ -26,9 +27,10 @@
   &__controls {
     display: flex;
     flex-direction: column;
+    align-items: center;
 
     label {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -49,6 +51,7 @@
     max-width: 1200px;
     margin: 20px 0;
     display: flex;
+    flex-direction: row-reverse;
     justify-content: center;
     flex-wrap: wrap;
   }
