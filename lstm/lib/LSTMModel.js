@@ -16,13 +16,9 @@
  */
 
 import * as tf from '@tensorflow/tfjs';
+import { MODEL_PATH } from '../constants/modelSettings';
 
-export const loadModel = async () =>
-  // eslint-disable-next-line implicit-arrow-linebreak
-  tf.loadLayersModel(
-    'https://raw.githubusercontent.com/djentelmenis/dainas-generator/master/server/model/model/1x/model.json',
-    'https://raw.githubusercontent.com/djentelmenis/dainas-generator/master/server/model/model/1x/weights.bin',
-  );
+export const loadModel = async () => tf.loadLayersModel(...MODEL_PATH);
 
 // Draw a sample based on probabilities.
 // eslint-disable-next-line arrow-body-style

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SAMPLE_LENGTH } from '../../lstm/constants/modelSettings';
 import { loadModel, getCharSet, getRandomSlice, generateText } from '../../lstm/lib/LSTMModel';
-import { data } from '../static/text.json';
+import { data } from '../../lstm/data/text.json';
 import DainaButton from './components/dainaButton/DainaButton';
 import Daina from './components/daina/Daina';
 
@@ -47,7 +47,7 @@ const App = () => {
         .join('\n');
       setDainas([...dainas, parsedDaina]);
       setIsGenerating(false);
-    }, 1);
+    }, 2);
   };
 
   return (

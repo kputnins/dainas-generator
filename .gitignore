@@ -15,5 +15,4 @@ node_modules/
 *.log
 
 # Scraped training data
-server/data/text.json
-client/static/text.json
+lstm/data/*

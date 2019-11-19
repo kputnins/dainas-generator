@@ -18,7 +18,7 @@
 
 const path = require('path');
 const tf = require('@tensorflow/tfjs-node');
-const textCorpus = require('../../client/static/text.json');
+const textCorpus = require('../../lstm/data/text.json');
 
 // Get the set of unique characters from text
 const getCharSet = (text, textLength) => {
@@ -184,16 +184,14 @@ const main = async () => {
   const textLength = text.length;
   const sampleLength = 60;
   const sampleStep = 3;
-  // const lstmLayerSizes = [256, 256, 256];
-  const lstmLayerSizes = [512, 512, 512];
-  const epochs = 300;
-  const examplesPerEpoch = 20000;
+  const lstmLayerSizes = [256, 256, 256];
+  const epochs = 500;
+  const examplesPerEpoch = 10000;
   const batchSize = 256;
-  const validationSplit = 0.0625;
-  // const learningRate = 1e-2;
-  const learningRate = 2e-2;
+  const validationSplit = 0.1;
+  const learningRate = 1e-2;
   const displayLength = 160;
-  const savePath = path.join('server', 'model', 'model');
+  const savePath = path.join('lstm', 'model');
 
   const charSet = getCharSet(text, textLength);
   const charSetSize = charSet.length;
@@ -226,7 +224,7 @@ const main = async () => {
         console.log(`Epoch ${epochCount} of ${epochs}:`);
       },
       onTrainEnd: async () => {
-        if (epochCount % 30 === 0) {
+        if (epochCount % (epochCount / 5) === 0) {
           DISPLAY_TEMPERATURES.forEach(async temperature => {
             const generated = await generateText(model, charSet, seedIndices, displayLength, temperature);
             console.log(`Generated text (temperature=${temperature}):`);
