@@ -24,5 +24,6 @@ module.exports = {
     'max-len': ['error', { code: 120 }],
     'no-await-in-loop': 0,
     'import/prefer-default-export': 0,
+    'react/jsx-one-expression-per-line': 0,
   },
 };

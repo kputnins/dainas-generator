@@ -8,9 +8,6 @@ import Daina from './components/daina/Daina';
 import './App.scss';
 
 const baseClass = 'dainas-generator';
-const infoLine1 = 'LSTM (Long Short Term Memory) model that generates Latvian folk songs - Dainas';
-const infoLine2 = 'Created using Tensorflow.js, based on the LSTM example';
-const infoLine3 = 'Full project code here';
 
 const App = () => {
   const [temperature, setTemperature] = useState(0.75);
@@ -19,8 +16,9 @@ const App = () => {
   const [text, setText] = useState('');
   const [textLength, setTextLength] = useState(0);
   const [charSet, setCharSet] = useState([]);
-  const [dainas, setDainas] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedChar, setGeneratedChar] = useState('');
+  const [dainas, setDainas] = useState([]);
 
   useEffect(() => {
     setText(data);
@@ -34,28 +32,43 @@ const App = () => {
     setCharSet(getCharSet(text, textLength));
   }, [text]);
 
+  useEffect(() => {
+    if (dainas.length > 0) {
+      const oldDainas = dainas.slice(0, -1);
+      const newDaina = dainas[dainas.length - 1] + generatedChar;
+      setDainas([...oldDainas, newDaina]);
+    }
+  }, [generatedChar]);
+
+  const onGenerateChar = async (c) => {
+    setGeneratedChar(c.replace('x', '\n'));
+  };
+
   const onGenerateDaina = async () => {
     setIsGenerating(true);
-    setTimeout(async () => {
-      const seedIndices = getRandomSlice(text, textLength, SAMPLE_LENGTH, charSet);
-      const generatedDaina = await generateText(model, charSet, seedIndices, displayLength, temperature);
-      const parsedDaina = generatedDaina
-        // .split('xx')
-        // .slice(1, -1)
-        // .join('xx')
-        .split('x')
-        .join('\n');
-      setDainas([...dainas, parsedDaina]);
-      setIsGenerating(false);
-    }, 2);
+    setDainas([...dainas, '']);
+    const seedIndices = getRandomSlice(text, textLength, SAMPLE_LENGTH, charSet);
+    await generateText(model, charSet, seedIndices, displayLength, temperature, onGenerateChar);
+    setIsGenerating(false);
+    setGeneratedChar('');
   };
 
   return (
     <div className={baseClass}>
       <h1 className={`${baseClass}__title-1`}>Dainas Generator</h1>
-      <p className={`${baseClass}__about`}>{infoLine1}</p>
-      <p className={`${baseClass}__about`}>{infoLine2}</p>
-      <p className={`${baseClass}__about`}>{infoLine3}</p>
+      <p className={`${baseClass}__about`}>
+        LSTM (Long Short Term Memory) model that generates Latvian folk songs -&nbsp;
+        <a href="https://en.wikipedia.org/wiki/Daina_(Latvia)">Dainas</a>
+      </p>
+      <p className={`${baseClass}__about`}>
+        Created using&nbsp;
+        <a href="https://www.tensorflow.org/js">Tensorflow.js</a>
+        , based on the LSTM&nbsp;
+        <a href="https://github.com/tensorflow/tfjs-examples/tree/master/lstm-text-generation">example</a>
+      </p>
+      <p className={`${baseClass}__about`}>
+        Full project code <a href="https://github.com/djentelmenis/dainas-generator">here</a>
+      </p>
       <h2 className={`${baseClass}__title-2`}>Generate Dainas</h2>
       <div className={`${baseClass}__controls`}>
         <label htmlFor="length">
@@ -63,8 +76,8 @@ const App = () => {
           <input
             name="length"
             type="range"
-            min="100"
-            max="500"
+            min="50"
+            max="1000"
             step="50"
             value={displayLength}
             onChange={event => setDisplayLength(event.target.value)}
@@ -82,6 +95,7 @@ const App = () => {
             onChange={event => setTemperature(event.target.value)}
           />
         </label>
+        {/* <textarea className="monospace" id="generated-text" value="test" rows="10" style={{ color: 'black' }} /> */}
         <DainaButton onClick={onGenerateDaina} tooltip="Dainafy!" loading={isGenerating} />
       </div>
       <div className={`${baseClass}__dainas`}>

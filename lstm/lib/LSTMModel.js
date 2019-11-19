@@ -60,6 +60,7 @@ export const generateText = async (model, charSet, sentenceIndices, length, temp
     const winnerChar = charSet[winnerIndex];
     if (onTextGenerationChar != null) {
       await onTextGenerationChar(winnerChar);
+      await tf.nextFrame();
     }
 
     generated += winnerChar;

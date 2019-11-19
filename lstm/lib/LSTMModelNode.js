@@ -19,7 +19,7 @@ const tf = require('@tensorflow/tfjs-node');
 
 /* eslint-disable no-console */
 // Get the set of unique characters from text
-export const getCharSet = (text, textLength) => {
+const getCharSet = (text, textLength) => {
   const charSet = [];
   for (let i = 0; i < textLength; ++i) {
     if (charSet.indexOf(text[i]) === -1) {
@@ -30,7 +30,7 @@ export const getCharSet = (text, textLength) => {
 };
 
 // Convert text string to integer indices
-export const textToIndices = (text, charSet) => {
+const textToIndices = (text, charSet) => {
   const indices = [];
   for (let i = 0; i < text.length; ++i) {
     indices.push(charSet.indexOf(text[i]));
@@ -39,14 +39,14 @@ export const textToIndices = (text, charSet) => {
 };
 
 // Get a random slice of text data
-export const getRandomSlice = (text, textLength, sampleLength, charSet) => {
+const getRandomSlice = (text, textLength, sampleLength, charSet) => {
   const startIndex = Math.round(Math.random() * (textLength - sampleLength - 1));
   const textSlice = text.slice(startIndex, startIndex + sampleLength);
   return [textSlice, textToIndices(textSlice, charSet)];
 };
 
 // Creates LSTM model
-export const createModel = (sampleLen, charSetSize, lstmLayerSizes) => {
+const createModel = (sampleLen, charSetSize, lstmLayerSizes) => {
   const model = tf.sequential();
 
   for (let i = 0; i < lstmLayerSizes.length; ++i) {
@@ -65,7 +65,7 @@ export const createModel = (sampleLen, charSetSize, lstmLayerSizes) => {
 };
 
 // Compiles model
-export const compileModel = (model, learningRate) => {
+const compileModel = (model, learningRate) => {
   const optimizer = tf.train.rmsprop(learningRate);
   model.compile({ optimizer, loss: 'categoricalCrossentropy' });
   console.log(`Compiled model with learning rate ${learningRate}`);
@@ -73,7 +73,7 @@ export const compileModel = (model, learningRate) => {
 };
 
 // Trains model
-export const fitModel = async (
+const fitModel = async (
   model,
   textLength,
   sampleLength,
@@ -124,7 +124,7 @@ export const fitModel = async (
 
 // Draw a sample based on probabilities.
 // eslint-disable-next-line arrow-body-style
-export const sample = (probs, temperature) => {
+const sample = (probs, temperature) => {
   return tf.tidy(() => {
     const logits = tf.div(tf.log(probs), Math.max(temperature, 1e-6));
     const isNormalized = false;
@@ -135,7 +135,7 @@ export const sample = (probs, temperature) => {
 };
 
 // Generate text using a next-char-prediction model.
-export const generateText = async (model, charSet, sentenceIndices, length, temperature, onTextGenerationChar) => {
+const generateText = async (model, charSet, sentenceIndices, length, temperature, onTextGenerationChar) => {
   const sampleLen = model.inputs[0].shape[1];
   const charSetSize = model.inputs[0].shape[2];
 
@@ -175,4 +175,15 @@ export const generateText = async (model, charSet, sentenceIndices, length, temp
     output.dispose();
   }
   return generated;
+};
+
+module.exports = {
+  getCharSet,
+  textToIndices,
+  getRandomSlice,
+  createModel,
+  compileModel,
+  fitModel,
+  sample,
+  generateText,
 };
