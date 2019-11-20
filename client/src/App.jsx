@@ -61,6 +61,9 @@ const App = () => {
         <a href="https://en.wikipedia.org/wiki/Daina_(Latvia)">Dainas</a>
       </p>
       <p className={`${baseClass}__about`}>
+        Browser executed text generation in real-time using a pre-trained model
+      </p>
+      <p className={`${baseClass}__about`}>
         Created using&nbsp;
         <a href="https://www.tensorflow.org/js">Tensorflow.js</a>
         , based on the LSTM&nbsp;

@@ -1,7 +1,7 @@
 @import '../../../static/styles/styles.scss';
 
 .daina {
-  border: 2px solid $color-corcodus-4;
+  border: 2px solid $color-corcodus-2;
   min-width: 250px;
   height: fit-content;
   margin: 10px;
@@ -20,6 +20,6 @@
   }
 
   &:hover {
-    background-color: $color-corcodus-4;
+    background-color: $color-corcodus-2;
   }
 }

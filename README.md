@@ -4,7 +4,7 @@ A LSTM (Long Short Term Memory) model that generates Latvian folk songs - Dainas
 
 - Node script to scrape the training text corpus
 - Node script to create and train the model with TensorFlow.js
-- React front end app, to generate folk songs by loading a model and generating data in the browser
+- React front end app, to generate folk songs by loading a pre-trained model and generating data in the browser
 
 ## Building and running on localhost
 
@@ -51,4 +51,4 @@ Due to the limitations of using TensorFlow.js in the browser, a pre-build model 
 - [createapp.dev](https://createapp.dev/)
 - [TensorFlow.js](https://www.tensorflow.org/js)
 - [TensorFlow.js LSTM Example](https://github.com/tensorflow/tfjs-examples/tree/master/lstm-text-generation)
-- [Dainuskapis](http://dainuskapis.lv/)
+- [Dainuskapis.lv](http://dainuskapis.lv/)
