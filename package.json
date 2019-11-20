@@ -1,14 +1,14 @@
 {
   "name": "dainu-generator",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A LSTM model that generates Latvian folk songs - dainas",
   "main": "index.html",
   "scripts": {
     "start": "parcel client/index.html --open",
     "build-client": "parcel build client/index.html",
     "clean-client": "rm -rf dist/*",
-    "build-data": "node server/data/buildData.js",
-    "build-model": "node server/model/buildModel.js"
+    "build-data": "node lstm/buildData.js",
+    "build-model": "node lstm/buildModel.js"
   },
   "author": "djentelmenis",
   "license": "MIT",

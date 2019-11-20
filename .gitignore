@@ -16,3 +16,4 @@ node_modules/
 
 # Scraped training data
 lstm/data/*
+text.json

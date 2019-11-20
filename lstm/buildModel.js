@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 const path = require('path');
-const settings = require('../../lstm/constants/modelSettings');
-const model = require('../../lstm/lib/LSTMModelNode');
-const textCorpus = require('../../lstm/data/text.json');
+const settings = require('./constants/modelSettings');
+const model = require('./lib/LSTMModelNode');
+const textCorpus = require('./data/text.json');
 
 const { getCharSet, textToIndices, createModel, compileModel, getRandomSlice, fitModel, generateText } = model;
 
