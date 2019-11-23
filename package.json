@@ -1,6 +1,6 @@
 {
   "name": "dainu-generator",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "A LSTM model that generates Latvian folk songs - dainas",
   "main": "index.html",
   "scripts": {
